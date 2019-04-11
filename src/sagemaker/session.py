@@ -201,7 +201,10 @@ class Session(object):  # pylint: disable=too-many-public-methods
             key_suffix = name
 
         bucket = bucket or self.default_bucket()
-        s3 = self.boto_session.resource("s3")
+        if self.s3_client == None:
+            s3 = self.boto_session.resource('s3')
+        else:
+            s3 = self.s3_client
 
         for local_path, s3_key in files:
             s3.Object(bucket, s3_key).upload_file(local_path, ExtraArgs=extra_args)
@@ -332,6 +335,12 @@ class Session(object):  # pylint: disable=too-many-public-methods
             str: The name of the default bucket, which is of the form:
                 ``sagemaker-{region}-{AWS account ID}``.
         """
+
+        if self.s3_client == None:
+            s3 = self.boto_session.resource('s3')
+        else:
+            s3 = self.s3_client
+
         if self._default_bucket:
             return self._default_bucket
 
@@ -369,7 +378,11 @@ class Session(object):  # pylint: disable=too-many-public-methods
         bucket = self.boto_session.resource("s3", region_name=region).Bucket(name=bucket_name)
         if bucket.creation_date is None:
             try:
-                s3 = self.boto_session.resource("s3", region_name=region)
+                if self.s3_client == None:
+                    s3 = self.boto_session.resource('s3', region_name=region)
+                else:
+                    s3 = self.s3_client
+
                 if region == "us-east-1":
                     # 'us-east-1' cannot be specified because it is the default region:
                     # https://github.com/boto/boto3/issues/125
