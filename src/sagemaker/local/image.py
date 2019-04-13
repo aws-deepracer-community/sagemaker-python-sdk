@@ -209,6 +209,7 @@ class _SageMakerContainer(object):
             "serve", additional_env_vars=environment, additional_volumes=volumes
         )
         compose_command = self._compose()
+        print("Compose command: {}".format(compose_command))
         self.container = _HostingContainer(compose_command)
         self.container.start()
 

@@ -110,8 +110,12 @@ class Session(object):  # pylint: disable=too-many-public-methods
         self._default_bucket_name_override = default_bucket
         self.s3_client = s3_client
 
-        # currently is used for local_code in local mode
-        self.config = None
+        sagemaker_config_file = os.path.join(os.path.expanduser('~'), '.sagemaker', 'config.yaml')
+        print("Looking for config file: {}".format(sagemaker_config_file))
+        if os.path.exists(sagemaker_config_file):
+            self.config = yaml.load(open(sagemaker_config_file, 'r'))
+        else:
+            self.config = None
 
         self._initialize(
             boto_session=boto_session,
