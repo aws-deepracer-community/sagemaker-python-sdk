@@ -168,7 +168,7 @@ class _SageMakerContainer(object):
             # lots of data downloaded from S3. This doesn't delete any local
             # data that was just mounted to the container.
             dirs_to_delete = [data_dir, shared_dir]
-            self._cleanup(dirs_to_delete)
+            self._cleanup(dirs_to_delete) 
 
         # Print our Job Complete line to have a similar experience to training on SageMaker where
         # you see this line at the end.
