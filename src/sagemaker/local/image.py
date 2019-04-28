@@ -547,6 +547,7 @@ class _SageMakerContainer(object):
         )
         if root_dir:
             root_dir = os.path.abspath(root_dir)
+        print("Using {} for container temp files".format(root_dir)) 
 
         working_dir = tempfile.mkdtemp(dir=root_dir)
 
