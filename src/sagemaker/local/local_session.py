@@ -31,6 +31,9 @@ from sagemaker.local.entities import (
 from sagemaker.session import Session
 from sagemaker.utils import get_config_value, _module_import_error
 
+import json
+import os
+
 logger = logging.getLogger(__name__)
 
 
@@ -406,6 +409,14 @@ class LocalSession(Session):
 
         self.sagemaker_client = LocalSagemakerClient(self)
         self.sagemaker_runtime_client = LocalSagemakerRuntimeClient(self.config)
+        self.environment_variables = {}
+
+        # Load extra environment_variables from a file
+        _env_vars_file = os.environ.get("LOCAL_ENV_VAR_JSON_PATH", None)
+        if _env_vars_file != None:
+            with open(_env_vars_file) as f:
+                self.environment_variables = json.load(f)
+
         self.local_mode = True
 
         sagemaker_config_file = os.path.join(os.path.expanduser("~"), ".sagemaker", "config.yaml")
