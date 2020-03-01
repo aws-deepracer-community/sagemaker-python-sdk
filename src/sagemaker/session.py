@@ -25,6 +25,7 @@ import boto3
 import botocore.config
 from botocore.exceptions import ClientError
 import six
+import yaml
 
 import sagemaker.logs
 from sagemaker import vpc_utils
