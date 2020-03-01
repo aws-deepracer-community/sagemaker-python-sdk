@@ -46,6 +46,7 @@ DOCKER_COMPOSE_HTTP_TIMEOUT = "120"
 # Environment variables to be set during training
 REGION_ENV_NAME = "AWS_REGION"
 TRAINING_JOB_NAME_ENV_NAME = "TRAINING_JOB_NAME"
+S3_ENDPOINT_URL_ENV_NAME = "S3_ENDPOINT_URL"
 
 logger = logging.getLogger(__name__)
 
@@ -138,12 +139,14 @@ class _SageMakerContainer(object):
         training_env_vars = {
             REGION_ENV_NAME: self.sagemaker_session.boto_region_name,
             TRAINING_JOB_NAME_ENV_NAME: job_name,
+	    S3_ENDPOINT_URL_ENV_NAME: self.sagemaker_session.s3_client.meta.client._endpoint.host
         }
         compose_data = self._generate_compose_file(
             "train", additional_volumes=volumes, additional_env_vars=training_env_vars
         )
         compose_command = self._compose()
 
+        print("Trying to launch image: " + str(self.image))
         if _ecr_login_if_needed(self.sagemaker_session.boto_session, self.image):
             _pull_image(self.image)
 

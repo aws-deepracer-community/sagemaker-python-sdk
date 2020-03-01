@@ -82,6 +82,7 @@ class Session(object):  # pylint: disable=too-many-public-methods
         sagemaker_client=None,
         sagemaker_runtime_client=None,
         default_bucket=None,
+        s3_client=None
     ):
         """Initialize a SageMaker ``Session``.
 
@@ -107,6 +108,7 @@ class Session(object):  # pylint: disable=too-many-public-methods
         """
         self._default_bucket = None
         self._default_bucket_name_override = default_bucket
+        self.s3_client = s3_client
 
         # currently is used for local_code in local mode
         self.config = None
