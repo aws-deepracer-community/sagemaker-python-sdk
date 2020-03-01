@@ -359,7 +359,8 @@ def tar_and_upload_dir(
             s3_client = session.resource('s3')
         else:
             print("Using provided s3_client")
-            s3_client.Object(bucket, key).upload_file(tar_file, ExtraArgs=extra_args)
+        
+        s3_client.Object(bucket, key).upload_file(tar_file, ExtraArgs=extra_args)
     finally:
         shutil.rmtree(tmp)
 
