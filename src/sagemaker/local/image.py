@@ -139,8 +139,12 @@ class _SageMakerContainer(object):
         training_env_vars = {
             REGION_ENV_NAME: self.sagemaker_session.boto_region_name,
             TRAINING_JOB_NAME_ENV_NAME: job_name,
-            S3_ENDPOINT_URL_ENV_NAME: self.sagemaker_session.s3_client.meta.client._endpoint.host,
         }
+        if self.sagemaker_session.s3_client is not None:
+            training_env_vars[
+                S3_ENDPOINT_URL_ENV_NAME
+            ] = self.sagemaker_session.s3_client.meta.client._endpoint.host
+
         compose_data = self._generate_compose_file(
             "train", additional_volumes=volumes, additional_env_vars=training_env_vars
         )
