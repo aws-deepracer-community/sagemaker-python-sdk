@@ -523,7 +523,6 @@ class _SageMakerContainer(object):
             "command": command,
             "networks": {"sagemaker-local": {"aliases": [host]}},
         }
-        host_config.update(self.sagemaker_session.extra_docker_content)
 
         # for GPU support pass in nvidia as the runtime, this is equivalent
         # to setting --runtime=nvidia in the docker commandline.
