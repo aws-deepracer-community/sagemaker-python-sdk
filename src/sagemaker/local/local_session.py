@@ -97,7 +97,7 @@ class LocalSagemakerClient(object):
             self.sagemaker_session,
         )
         training_job = _LocalTrainingJob(container)
-        hyperparameters = kwargs['HyperParameters'] if 'HyperParameters' in kwargs else {}
+        hyperparameters = kwargs["HyperParameters"] if "HyperParameters" in kwargs else {}
         logger.info("Starting training job")
         training_job.start(InputDataConfig, OutputDataConfig, hyperparameters, TrainingJobName)
 
