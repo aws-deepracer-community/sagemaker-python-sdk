@@ -139,14 +139,15 @@ class _SageMakerContainer(object):
         training_env_vars = {
             REGION_ENV_NAME: self.sagemaker_session.boto_region_name,
             TRAINING_JOB_NAME_ENV_NAME: job_name,
-	    S3_ENDPOINT_URL_ENV_NAME: self.sagemaker_session.s3_client.meta.client._endpoint.host
+    	    S3_ENDPOINT_URL_ENV_NAME: self.sagemaker_session.s3_client.meta.client._endpoint.host
         }
         compose_data = self._generate_compose_file(
             "train", additional_volumes=volumes, additional_env_vars=training_env_vars
         )
         compose_command = self._compose()
 
-        print("Trying to launch image: " + str(self.image))
+        logger.info("Trying to launch image: " + str(self.image))
+
         if _ecr_login_if_needed(self.sagemaker_session.boto_session, self.image):
             _pull_image(self.image)
 
@@ -168,7 +169,7 @@ class _SageMakerContainer(object):
             # lots of data downloaded from S3. This doesn't delete any local
             # data that was just mounted to the container.
             dirs_to_delete = [data_dir, shared_dir]
-            self._cleanup(dirs_to_delete) 
+            self._cleanup(dirs_to_delete)
 
         # Print our Job Complete line to have a similar experience to training on SageMaker where
         # you see this line at the end.
@@ -209,7 +210,7 @@ class _SageMakerContainer(object):
             "serve", additional_env_vars=environment, additional_volumes=volumes
         )
         compose_command = self._compose()
-        print("Compose command: {}".format(compose_command))
+        logger.info("Compose command: {}".format(compose_command))
         self.container = _HostingContainer(compose_command)
         self.container.start()
 
@@ -547,7 +548,7 @@ class _SageMakerContainer(object):
         )
         if root_dir:
             root_dir = os.path.abspath(root_dir)
-        print("Using {} for container temp files".format(root_dir)) 
+        logger.info("Using {} for container temp files".format(root_dir)) 
 
         working_dir = tempfile.mkdtemp(dir=root_dir)
 
