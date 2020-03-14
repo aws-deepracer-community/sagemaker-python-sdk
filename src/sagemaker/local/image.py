@@ -139,14 +139,14 @@ class _SageMakerContainer(object):
         training_env_vars = {
             REGION_ENV_NAME: self.sagemaker_session.boto_region_name,
             TRAINING_JOB_NAME_ENV_NAME: job_name,
-    	    S3_ENDPOINT_URL_ENV_NAME: self.sagemaker_session.s3_client.meta.client._endpoint.host
+            S3_ENDPOINT_URL_ENV_NAME: self.sagemaker_session.s3_client.meta.client._endpoint.host,
         }
         compose_data = self._generate_compose_file(
             "train", additional_volumes=volumes, additional_env_vars=training_env_vars
         )
         compose_command = self._compose()
 
-        logger.info("Trying to launch image: " + str(self.image))
+        logger.info("Trying to launch image: %s", str(self.image))
 
         if _ecr_login_if_needed(self.sagemaker_session.boto_session, self.image):
             _pull_image(self.image)
@@ -210,7 +210,7 @@ class _SageMakerContainer(object):
             "serve", additional_env_vars=environment, additional_volumes=volumes
         )
         compose_command = self._compose()
-        logger.info("Compose command: {}".format(compose_command))
+        logger.info("Compose command: %s", compose_command)
         self.container = _HostingContainer(compose_command)
         self.container.start()
 
@@ -548,7 +548,7 @@ class _SageMakerContainer(object):
         )
         if root_dir:
             root_dir = os.path.abspath(root_dir)
-        logger.info("Using {} for container temp files".format(root_dir)) 
+        logger.info("Using %s for container temp files.", root_dir)
 
         working_dir = tempfile.mkdtemp(dir=root_dir)
 
